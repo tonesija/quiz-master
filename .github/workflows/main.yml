@@ -16,6 +16,7 @@ jobs:
           python -m venv .venv
       - name: Install pip requirements
         run: |
+          cd server
           python -m pip install -r requirements.txt
       #- name: Run UTs
       #  run: pytest -v
