@@ -2,12 +2,10 @@ from fastapi import FastAPI
 import uvicorn
 from config import settings
 
+from fastapi.staticfiles import StaticFiles
+
 app = FastAPI()
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
 
 @app.get("/posts")
 async def root():
@@ -21,6 +19,11 @@ async def root():
             "content": "Content 3",
         },
     ]
+
+
+# Serve SPA
+if settings.SERVER_MODE != "build":
+    app.mount("/", StaticFiles(directory="public/build", html=True))
 
 if __name__ == "__main__":
     uvicorn.run(
