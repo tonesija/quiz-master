@@ -1,7 +1,7 @@
 function App() {
   return (
     <div>
-      Quiz Master
+      Quiz Muster
     </div>
   );
 }
