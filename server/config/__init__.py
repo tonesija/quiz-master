@@ -11,7 +11,7 @@ class ServerSettings(BaseSettings):
 
     HOST: str = "0.0.0.0"
     PORT: int = 8000
-    SERVER_MODE = "dev"
+    SERVER_MODE: str = "dev"
 
 
 class Settings(CommonSettings, ServerSettings):

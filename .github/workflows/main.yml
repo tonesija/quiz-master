@@ -21,7 +21,7 @@ jobs:
       - name: Run UTs
         run: |
           cd server
-          SERVER_MODE=build
+          export SERVER_MODE=build
           pytest -v
 
   build-and-deploy:
