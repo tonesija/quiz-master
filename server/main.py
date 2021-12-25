@@ -22,7 +22,8 @@ async def root():
 
 
 # Serve SPA
-app.mount("/", StaticFiles(directory="public/build", html=True))
+if settings.SERVER_MODE != "build":
+    app.mount("/", StaticFiles(directory="public/build", html=True))
 
 if __name__ == "__main__":
     uvicorn.run(
