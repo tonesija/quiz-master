@@ -18,8 +18,8 @@ jobs:
         run: |
           cd server
           python -m pip install -r requirements.txt
-      #- name: Run UTs
-      #  run: pytest -v
+      - name: Run UTs
+        run: pytest -v
 
   build-and-deploy:
     needs: [test]
