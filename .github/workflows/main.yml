@@ -19,7 +19,9 @@ jobs:
           cd server
           python -m pip install -r requirements.txt
       - name: Run UTs
-        run: pytest -v
+        run: |
+          cd server
+          pytest -v
 
   build-and-deploy:
     needs: [test]
