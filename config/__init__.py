@@ -24,7 +24,20 @@ class DatabaseSettings(BaseSettings):
         env_file_encoding = "utf-8"
 
 
-class Settings(CommonSettings, ServerSettings, DatabaseSettings):
+class Auth0Settings(BaseSettings):
+    """Add the .env file with these keys."""
+
+    DOMAIN: str = "domain"
+    API_AUDIENCE: str = "api_audience"
+    ISSUER: str = "issuer"
+    ALGORITHMS: str = "RS256"
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+
+class Settings(CommonSettings, ServerSettings, DatabaseSettings, Auth0Settings):
     pass
 
 
