@@ -29,3 +29,7 @@ class Settings(CommonSettings, ServerSettings, DatabaseSettings):
 
 
 settings = Settings()
+
+
+def get_database_url():
+    return settings.DATABASE_URL.replace("postgres", "postgresql")
