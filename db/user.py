@@ -11,3 +11,4 @@ class User(Base):
     email = Column(String, unique=True, index=True)
 
     quizes = relationship("Quiz")
+    questions = relationship("Question")
