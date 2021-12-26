@@ -4,6 +4,7 @@ from config import settings
 
 from fastapi.staticfiles import StaticFiles
 
+
 app = FastAPI()
 
 
