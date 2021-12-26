@@ -5,6 +5,12 @@ from sqlalchemy import pool
 
 from alembic import context
 
+# Need to import all models for Base to have their metadata
+# For autogenerate to work
+from db.quiz import Quiz
+from db.user import User
+from db.db import Base
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -23,10 +29,6 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-from db.user import Base
-
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

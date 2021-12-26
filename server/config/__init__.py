@@ -32,4 +32,4 @@ settings = Settings()
 
 
 def get_database_url():
-    return settings.DATABASE_URL.replace("postgres", "postgresql")
+    return settings.DATABASE_URL.replace("postgres://", "postgresql://")
