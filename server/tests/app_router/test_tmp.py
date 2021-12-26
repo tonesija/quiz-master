@@ -5,7 +5,7 @@ import pytest
 class TestTmp:
     """Temporary class for testing."""
 
-    @pytest.skip
+    @pytest.mark.skip(reason="Outdated")
     def test_tmp(self, client):
         """Temporary test for the time being."""
 
