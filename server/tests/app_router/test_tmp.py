@@ -1,10 +1,11 @@
 from fastapi import status
-from starlette.status import HTTP_200_OK
+import pytest
 
 
 class TestTmp:
     """Temporary class for testing."""
 
+    @pytest.skip
     def test_tmp(self, client):
         """Temporary test for the time being."""
 
