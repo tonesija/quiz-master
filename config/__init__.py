@@ -14,7 +14,17 @@ class ServerSettings(BaseSettings):
     SERVER_MODE: str = "dev"
 
 
-class Settings(CommonSettings, ServerSettings):
+class DatabaseSettings(BaseSettings):
+    """Add the .env file with these keys."""
+
+    DATABASE_URL: str = "database_url"
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+
+class Settings(CommonSettings, ServerSettings, DatabaseSettings):
     pass
 
 
