@@ -4,22 +4,12 @@ from config import settings
 
 from fastapi.staticfiles import StaticFiles
 
+from routers import mock_router
 
 app = FastAPI()
 
-
-@app.get("/posts")
-async def root():
-    return [
-        {
-            "title": "Title 1",
-            "content": "Content 1",
-        },
-        {
-            "title": "Title 2",
-            "content": "Content 3",
-        },
-    ]
+# Include routers
+app.include_router(mock_router.router)
 
 
 # Serve SPA
