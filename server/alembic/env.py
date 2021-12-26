@@ -9,6 +9,8 @@ from alembic import context
 # For autogenerate to work
 from db.quiz import Quiz
 from db.user import User
+from db.question import Question
+from db.subquestion import Subquestion
 from db.db import Base
 
 # this is the Alembic Config object, which provides
