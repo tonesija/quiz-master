@@ -7,7 +7,7 @@ const Profile = () => {
     if (isAuthenticated) {
         getAccessTokenSilently().then(accessToken => {
             console.log(accessToken)
-            accessToken = accessToken
+            // accessToken = accessToken
         });
     }
     
