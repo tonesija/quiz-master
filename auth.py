@@ -19,7 +19,12 @@ def authenticate(token: str = Depends(token_auth_scheme)):
         (result): if the autentification was successful.
     """
 
+    # These prints are temporary for debugging TODO: remove
+    # when you get the email cleanly
+    print(token)
+    print()
     result = VerifyToken(token.credentials).verify()
+    print(result)
 
     if result.get("status"):
         raise HTTPException(400, detail="Auth error")
