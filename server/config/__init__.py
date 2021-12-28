@@ -3,7 +3,7 @@ from pydantic import BaseSettings
 
 class CommonSettings(BaseSettings):
     APP_NAME: str = "Quiz Master"
-    DEBUG_MODE: bool = False
+    DEBUG_MODE: bool = True
 
 
 class ServerSettings(BaseSettings):

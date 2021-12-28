@@ -19,4 +19,4 @@ class Quiz(Base):
 
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    children = relationship("Child", secondary=questions_quizes)
+    children = relationship("Question", secondary=questions_quizes)
