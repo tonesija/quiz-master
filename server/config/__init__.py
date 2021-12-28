@@ -17,7 +17,7 @@ class ServerSettings(BaseSettings):
 class DatabaseSettings(BaseSettings):
     """Add the .env file with these keys."""
 
-    DATABASE_URL: str = "database_url"
+    DATABASE_URL: str = "postgres://postgres:postgres@localhost:5432/postgres"
 
     class Config:
         env_file = ".env"
