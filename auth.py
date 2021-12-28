@@ -1,7 +1,12 @@
 import jwt
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.session import Session
 from config import settings
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer
+from db.user import User
+
+from db.db import get_db
 
 token_auth_scheme = HTTPBearer()
 
@@ -19,17 +24,51 @@ def authenticate(token: str = Depends(token_auth_scheme)):
         (result): if the autentification was successful.
     """
 
-    # These prints are temporary for debugging TODO: remove
-    # when you get the email cleanly
-    print(token)
-    print()
     result = VerifyToken(token.credentials).verify()
-    print(result)
 
     if result.get("status"):
         raise HTTPException(400, detail="Auth error")
 
     return result
+
+
+def get_email(auth_result=Depends(authenticate)):
+    """Auth dependency.
+
+    Args:
+        auth_result ([type], optional): auth result gotten from authenticate
+        dependency.
+
+    Returns:
+        (str): authenticated user's email.
+    """
+
+    for key, item in auth_result.items():
+        if "/email" in key:
+            return item
+    return None
+
+
+def get_and_create_users_id(
+    db: Session = Depends(get_db), email: str = Depends(get_email)
+):
+    """Auth dependency.
+
+    Args:
+        email (str): email from get_email auth dependency.
+
+    Returns:
+        (int): authenticated user's id.
+    """
+
+    try:
+        user = db.query(User).filter(User.email == email).one()
+        return user.id
+    except NoResultFound:
+        new_user = User(email=email)
+        db.add(new_user)
+        db.commit()
+        return new_user.id
 
 
 class VerifyToken:

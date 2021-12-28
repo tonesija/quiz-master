@@ -3,7 +3,7 @@ from pydantic import BaseSettings
 
 class CommonSettings(BaseSettings):
     APP_NAME: str = "Quiz Master"
-    DEBUG_MODE: bool = False
+    DEBUG_MODE: bool = True
 
 
 class ServerSettings(BaseSettings):
@@ -17,7 +17,7 @@ class ServerSettings(BaseSettings):
 class DatabaseSettings(BaseSettings):
     """Add the .env file with these keys."""
 
-    DATABASE_URL: str = "database_url"
+    DATABASE_URL: str = "postgres://postgres:postgres@localhost:5432/postgres"
 
     class Config:
         env_file = ".env"

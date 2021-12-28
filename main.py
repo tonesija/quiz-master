@@ -4,12 +4,12 @@ from config import settings
 
 from fastapi.staticfiles import StaticFiles
 
-from routers import mock_router
+from routers import quiz_router
 
 app = FastAPI()
 
 # Include routers
-app.include_router(mock_router.router)
+app.include_router(quiz_router.router)
 
 
 # Serve SPA
