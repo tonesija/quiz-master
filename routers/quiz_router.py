@@ -98,7 +98,7 @@ async def update_quiz(
             Quiz.id == quiz_id and Quiz.user_id == user_id
         )
         quiz_query.one()
-        quiz_query.update(quiz_update.dict())
+        quiz_query.update(quiz_update.dict(exclude_unset=True))
         db.commit()
         return
     except NoResultFound:
