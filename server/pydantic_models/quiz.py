@@ -1,8 +1,10 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
 class QuizBase(BaseModel):
     name: str
+    public: Optional[bool]
 
 
 class QuizCreate(QuizBase):
@@ -18,5 +20,6 @@ class QuizOut(QuizBase):
         orm_mode = True
 
 
-class QuizUpdate(QuizBase):
-    pass
+class QuizUpdate(BaseModel):
+    name: Optional[str]
+    public: Optional[bool]
