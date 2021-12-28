@@ -11,6 +11,7 @@ class Question(Base):
     outer_text = Column(String(400), nullable=True, index=True)
     questions_per_slide = Column(Integer, default=0)
     public = Column(Boolean, server_default="f")
+    img_url = Column(String(255), nullable=True)
 
     user_id = Column(Integer, ForeignKey("users.id"))
 
