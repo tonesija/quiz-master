@@ -37,6 +37,29 @@ async def list_owned(
     return questions
 
 
+@router.get(
+    "/{question_id}",
+    response_model=QuestionOut,
+    responses={status.HTTP_404_NOT_FOUND: {}},
+)
+async def get_question(
+    question_id: int,
+    user: User = Depends(get_and_create_user),
+    db: Session = Depends(get_db),
+):
+    """Get the specific current user's owned question."""
+
+    try:
+        question = (
+            db.query(Question)
+            .filter(Question.user_id == user.id and Question.id == question_id)
+            .one()
+        )
+        return question
+    except NoResultFound:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Question not found.")
+
+
 @router.post("/", response_model=QuestionOut)
 async def create_question(
     question: QuestionCreate,

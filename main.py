@@ -4,7 +4,7 @@ from config import settings
 
 from fastapi.staticfiles import StaticFiles
 
-from routers import quiz_router, question_router, groups_router
+from routers import quiz_router, question_router, groups_router, subquestions_router
 
 app = FastAPI()
 
@@ -12,6 +12,7 @@ app = FastAPI()
 app.include_router(quiz_router.router)
 app.include_router(question_router.router)
 app.include_router(groups_router.router)
+app.include_router(subquestions_router.router)
 
 
 # Serve SPA

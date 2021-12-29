@@ -19,5 +19,9 @@ class Question(Base):
 
     subquestions = relationship("Subquestion")
 
-    quizes = relationship("Quiz", secondary=questions_quizes)
-    groups = relationship("Group", secondary=questions_groups)
+    quizes = relationship(
+        "Quiz", secondary=questions_quizes, back_populates="questions"
+    )
+    groups = relationship(
+        "Group", secondary=questions_groups, back_populates="questions"
+    )

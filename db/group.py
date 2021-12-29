@@ -29,4 +29,6 @@ class Group(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
 
     users = relationship("User", secondary=users_groups)
-    questions = relationship("Question", secondary=questions_groups)
+    questions = relationship(
+        "Question", secondary=questions_groups, back_populates="groups"
+    )

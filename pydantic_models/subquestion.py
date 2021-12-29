@@ -4,11 +4,11 @@ from pydantic import BaseModel
 
 class SubquestionBase(BaseModel):
     text: str
-    answer: int
-    public: Optional[bool]
+    answer: str
+    img_url: Optional[str]
 
 
-class QuestionCreate(SubquestionBase):
+class SubquestionCreate(SubquestionBase):
     pass
 
 
