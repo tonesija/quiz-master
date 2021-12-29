@@ -14,7 +14,7 @@ from pydantic_models.subquestion import (
 
 
 router = APIRouter(
-    prefix="/my/questions/{questions_id}/subquestions", tags=["Subquestions"]
+    prefix="/my/questions/{question_id}/subquestions", tags=["Subquestions"]
 )
 
 
@@ -67,8 +67,8 @@ async def update_subquestion(
 
     try:
         # Trigger NoResultFound if it is not the authorized user's question.
-        db.query(Question).filter(
-            Question.user_id == user.id and Question.id == question_id
+        db.query(Question).filter(Question.user_id == user.id).filter(
+            Question.id == question_id
         ).one()
 
         subquestion_query = db.query(Subquestion).filter(
@@ -98,8 +98,8 @@ async def delete_subquestion(
 
     try:
         # Trigger NoResultFound if it is not the authorized user's question.
-        db.query(Question).filter(
-            Question.user_id == user.id and Question.id == question_id
+        db.query(Question).filter(Question.user_id == user.id).filter(
+            Question.id == question_id
         ).one()
 
         subquestion_db = (

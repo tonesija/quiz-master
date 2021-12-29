@@ -52,7 +52,8 @@ async def get_question(
     try:
         question = (
             db.query(Question)
-            .filter(Question.user_id == user.id and Question.id == question_id)
+            .filter(Question.user_id == user.id)
+            .filter(Question.id == question_id)
             .one()
         )
         return question
@@ -88,9 +89,12 @@ async def update_question(
         HTTPException: 404 if the question is not found.
     """
     try:
-        question_query = db.query(Question).filter(
-            Question.user_id == user.id and Question.id == question_id
+        question_query = (
+            db.query(Question)
+            .filter(Question.user_id == user.id)
+            .filter(Question.id == question_id)
         )
+
         question_query.one()
         question_query.update(question_update.dict(exclude_unset=True))
         db.commit()
@@ -113,7 +117,8 @@ async def delete_question(
     try:
         question_db = (
             db.query(Question)
-            .filter(Question.user_id == user.id and Question.id == question_id)
+            .filter(Question.user_id == user.id)
+            .filter(Question.id == question_id)
             .one()
         )
         db.delete(question_db)
