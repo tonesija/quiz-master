@@ -4,30 +4,31 @@ from fastapi.exceptions import HTTPException
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
-from auth import get_and_create_users_id
+from auth import get_and_create_user
 from db.db import get_db
 from db.quiz import Quiz
 from pydantic_models.quiz import QuizCreate, QuizOut, QuizUpdate
+from db.user import User
 
 router = APIRouter(prefix="/my/quizes", tags=["Quizes"])
 
 
 @router.get("/", response_model=List[QuizOut])
 async def list(
-    user_id: int = Depends(get_and_create_users_id), db: Session = Depends(get_db)
+    user: User = Depends(get_and_create_user), db: Session = Depends(get_db)
 ):
     """List current user's quizes."""
 
-    quizes = db.query(Quiz).filter(Quiz.user_id == user_id).all()
+    quizes = db.query(Quiz).filter(Quiz.user_id == user.id).all()
     return quizes
 
 
 @router.get(
-    "/{quiz_id}}", response_model=QuizOut, responses={status.HTTP_404_NOT_FOUND: {}}
+    "/{quiz_id}", response_model=QuizOut, responses={status.HTTP_404_NOT_FOUND: {}}
 )
 async def get_quiz(
     quiz_id: int,
-    user_id: int = Depends(get_and_create_users_id),
+    user: User = Depends(get_and_create_user),
     db: Session = Depends(get_db),
 ):
     """Return a current user's specific quiz.
@@ -38,7 +39,7 @@ async def get_quiz(
 
     try:
         quiz_db = (
-            db.query(Quiz).filter(Quiz.id == quiz_id and Quiz.user_id == user_id).one()
+            db.query(Quiz).filter(Quiz.id == quiz_id and Quiz.user_id == user.id).one()
         )
         return quiz_db
     except NoResultFound:
@@ -52,7 +53,7 @@ async def get_quiz(
 )
 async def create_quiz(
     quiz: QuizCreate,
-    user_id: int = Depends(get_and_create_users_id),
+    user: User = Depends(get_and_create_user),
     db: Session = Depends(get_db),
 ):
     """Create a quiz.
@@ -66,7 +67,7 @@ async def create_quiz(
 
     try:
         quiz_db = Quiz(**quiz.dict())
-        quiz_db.user_id = user_id
+        quiz_db.user_id = user.id
         db.add(quiz_db)
         db.commit()
     except IntegrityError:
@@ -83,7 +84,7 @@ async def create_quiz(
 async def update_quiz(
     quiz_id: int,
     quiz_update: QuizUpdate,
-    user_id: int = Depends(get_and_create_users_id),
+    user: User = Depends(get_and_create_user),
     db: Session = Depends(get_db),
 ):
     """Updates current user's quiz.
@@ -95,7 +96,7 @@ async def update_quiz(
 
     try:
         quiz_query = db.query(Quiz).filter(
-            Quiz.id == quiz_id and Quiz.user_id == user_id
+            Quiz.id == quiz_id and Quiz.user_id == user.id
         )
         quiz_query.one()
         quiz_query.update(quiz_update.dict(exclude_unset=True))
@@ -112,7 +113,7 @@ async def update_quiz(
 @router.delete("/{quiz_id}", responses={status.HTTP_404_NOT_FOUND: {}})
 async def delete_quiz(
     quiz_id: int,
-    user_id: int = Depends(get_and_create_users_id),
+    user: User = Depends(get_and_create_user),
     db: Session = Depends(get_db),
 ):
     """Delete current user's quit.
@@ -123,7 +124,7 @@ async def delete_quiz(
 
     try:
         quiz_db = (
-            db.query(Quiz).filter(Quiz.id == quiz_id and Quiz.user_id == user_id).one()
+            db.query(Quiz).filter(Quiz.id == quiz_id and Quiz.user_id == user.id).one()
         )
         db.delete(quiz_db)
         db.commit()
