@@ -1,51 +1,43 @@
 from typing import List
-from fastapi.params import Depends
-from fastapi.routing import APIRouter
+from fastapi import Depends, status, APIRouter, HTTPException
 from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.exc import NoResultFound
 from auth import get_and_create_user
 from db.db import get_db
-
-from pydantic_models.question import QuestionCreate, QuestionOut
+from pydantic_models.question import QuestionCreate, QuestionOut, QuestionUpdate
 from db.question import Question
-from db.quiz import Quiz
 from db.user import User
 
 
-router = APIRouter(prefix="/my", tags=["Questions"])
+router = APIRouter(prefix="/my/questions", tags=["Questions"])
 
 
-def create_question(question: QuestionCreate, db: Session, quiz_id: int = None):
-    """Creates a question in the db. If the quiz id is specified, the question
-    and the quiz are linken.
-
-    Args:
-        question (QuestionCreate): question pydantic model.
-        db (Session): db session.
-        quiz_id (int, optional): Id of a quiz. Defaults to None.
-    """
-
-    if quiz_id:
-        quiz_db = db.query(Quiz).filter(Quiz, id == quiz_id).one()
-        question_db = Question(**question.dict())
-        quiz_db.append(question_db)
-        db.add(quiz_db)
-    else:
-        question_db = Question(**question.dict())
-        db.add(question_db)
-    db.commit()
-
-
-@router.get("/questions", response_model=List[QuestionOut])
-async def list_all(
-    user: User = Depends(get_and_create_user), db: Session = Depends(get_db)
+@router.get(
+    "/",
+    response_model=List[QuestionOut],
+)
+async def list_owned(
+    offset: int = 0,
+    limit: int = 100,
+    q: str = "",
+    user: User = Depends(get_and_create_user),
+    db: Session = Depends(get_db),
 ):
-    """List all authenticated user's questions."""
+    """List current user's owned questions."""
 
-    questions = db.query(Question).filter(Question.user_id == user.id).all()
+    questions = (
+        db.query(Question)
+        .filter(Question.user_id == user.id)
+        .filter(Question.outer_text.like(f"%{q}%"))
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
     return questions
 
 
-@router.post("/questions", response_model=QuestionOut)
+@router.post("/", response_model=QuestionOut)
 async def create_question(
     question: QuestionCreate,
     user: User = Depends(get_and_create_user),
@@ -58,3 +50,50 @@ async def create_question(
     db.add(question_db)
     db.commit()
     return question_db
+
+
+@router.put("/{question_id}", responses={status.HTTP_404_NOT_FOUND: {}})
+async def update_question(
+    question_id: int,
+    question_update: QuestionUpdate,
+    user: User = Depends(get_and_create_user),
+    db: Session = Depends(get_db),
+):
+    """Updates authorized user's question.
+
+    Raises:
+        HTTPException: 404 if the question is not found.
+    """
+    try:
+        question_query = db.query(Question).filter(
+            Question.user_id == user.id and Question.id == question_id
+        )
+        question_query.one()
+        question_query.update(question_update.dict(exclude_unset=True))
+        db.commit()
+    except NoResultFound:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Question not found.")
+
+
+@router.delete("/{question_id}", responses={status.HTTP_404_NOT_FOUND: {}})
+async def delete_question(
+    question_id: int,
+    user: User = Depends(get_and_create_user),
+    db: Session = Depends(get_db),
+):
+    """Deletes authorized user's question.
+
+    Raises:
+        HTTPException: 404 if the question is not found.
+    """
+
+    try:
+        question_db = (
+            db.query(Question)
+            .filter(Question.user_id == user.id and Question.id == question_id)
+            .one()
+        )
+        db.delete(question_db)
+        db.commit()
+    except NoResultFound:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Question not found.")

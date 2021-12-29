@@ -1,7 +1,7 @@
 import jwt
 from sqlalchemy.orm.session import Session
 from config import settings
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer
 
 from db.db import get_db
@@ -26,7 +26,7 @@ def authenticate(token: str = Depends(token_auth_scheme)):
     result = VerifyToken(token.credentials).verify()
 
     if result.get("status"):
-        raise HTTPException(400, detail="Auth error")
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Unauthorized.")
 
     return result
 

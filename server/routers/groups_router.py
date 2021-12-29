@@ -1,6 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, status
-from fastapi.exceptions import HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
@@ -161,7 +160,6 @@ async def update_group(
         group_query.one()
         group_query.update(group_update.dict(exclude_unset=True))
         db.commit()
-        return
     except NoResultFound:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Group not found.")
     except IntegrityError:
