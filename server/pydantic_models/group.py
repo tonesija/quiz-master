@@ -3,8 +3,6 @@ from pydantic import BaseModel
 
 from db.group import Group
 
-from pydantic_models.question import QuestionOut
-
 
 class GroupBase(BaseModel):
     name: str
@@ -18,7 +16,6 @@ class GroupCreate(GroupBase):
 class GroupOut(GroupBase):
     id: int
     users: List[str] = []
-    questions: List[QuestionOut] = []
 
     @classmethod
     def from_orm(cls, group_db: Group):
@@ -33,13 +30,11 @@ class GroupOut(GroupBase):
         """
 
         emails = [user.email for user in group_db.users]
-        questions = group_db.questions
         return cls(
             id=group_db.id,
             name=group_db.name,
             desc=group_db.desc,
             users=emails,
-            questions=questions,
         )
 
     class Config:
@@ -53,3 +48,7 @@ class GroupUpdate(BaseModel):
 
 class GroupAddMember(BaseModel):
     email: str
+
+
+class GroupAddQuestion(BaseModel):
+    question_id: int

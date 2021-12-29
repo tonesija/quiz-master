@@ -2,6 +2,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import Boolean
 from db.db import Base
+from db.quiz import questions_quizes
+from db.group import questions_groups
 
 
 class Question(Base):
@@ -16,3 +18,6 @@ class Question(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
 
     subquestions = relationship("Subquestion")
+
+    quizes = relationship("Quiz", secondary=questions_quizes)
+    groups = relationship("Group", secondary=questions_groups)

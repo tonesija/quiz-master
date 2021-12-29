@@ -39,7 +39,22 @@ def create_question(question: QuestionCreate, db: Session, quiz_id: int = None):
 async def list_all(
     user: User = Depends(get_and_create_user), db: Session = Depends(get_db)
 ):
-    """List all current user's questions."""
+    """List all authenticated user's questions."""
 
     questions = db.query(Question).filter(Question.user_id == user.id).all()
     return questions
+
+
+@router.post("/questions", response_model=QuestionOut)
+async def create_question(
+    question: QuestionCreate,
+    user: User = Depends(get_and_create_user),
+    db: Session = Depends(get_db),
+):
+    """Creates a question for the authenticated user."""
+
+    question_db = Question(**question.dict())
+    question_db.user_id = user.id
+    db.add(question_db)
+    db.commit()
+    return question_db
