@@ -15,11 +15,11 @@ from routers import (
 app = FastAPI()
 
 # Include routers
-app.include_router(quiz_router.router)
-app.include_router(question_router.router)
-app.include_router(groups_router.router)
-app.include_router(subquestions_router.router)
 app.include_router(public_router.router)
+app.include_router(quiz_router.router)
+app.include_router(groups_router.router)
+app.include_router(question_router.router)
+app.include_router(subquestions_router.router)
 
 
 # Serve SPA
