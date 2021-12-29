@@ -1,12 +1,11 @@
 import jwt
-from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.session import Session
 from config import settings
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer
-from db.user import User
 
 from db.db import get_db
+from services.utils import create_and_get_user_by_email
 
 token_auth_scheme = HTTPBearer()
 
@@ -49,9 +48,7 @@ def get_email(auth_result=Depends(authenticate)):
     return None
 
 
-def get_and_create_users_id(
-    db: Session = Depends(get_db), email: str = Depends(get_email)
-):
+def get_and_create_user(db: Session = Depends(get_db), email: str = Depends(get_email)):
     """Auth dependency.
 
     Args:
@@ -61,14 +58,8 @@ def get_and_create_users_id(
         (int): authenticated user's id.
     """
 
-    try:
-        user = db.query(User).filter(User.email == email).one()
-        return user.id
-    except NoResultFound:
-        new_user = User(email=email)
-        db.add(new_user)
-        db.commit()
-        return new_user.id
+    user = create_and_get_user_by_email(db, email)
+    return user
 
 
 class VerifyToken:

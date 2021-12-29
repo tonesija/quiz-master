@@ -2,12 +2,13 @@ from typing import List
 from fastapi.params import Depends
 from fastapi.routing import APIRouter
 from sqlalchemy.orm.session import Session
-from auth import get_and_create_users_id
+from auth import get_and_create_user
 from db.db import get_db
 
 from pydantic_models.question import QuestionCreate, QuestionOut
 from db.question import Question
 from db.quiz import Quiz
+from db.user import User
 
 
 router = APIRouter(prefix="/my", tags=["Questions"])
@@ -36,9 +37,9 @@ def create_question(question: QuestionCreate, db: Session, quiz_id: int = None):
 
 @router.get("/questions", response_model=List[QuestionOut])
 async def list_all(
-    user_id: int = Depends(get_and_create_users_id), db: Session = Depends(get_db)
+    user: User = Depends(get_and_create_user), db: Session = Depends(get_db)
 ):
     """List all current user's questions."""
 
-    questions = db.query(Question).filter(Question.user_id == user_id).all()
+    questions = db.query(Question).filter(Question.user_id == user.id).all()
     return questions

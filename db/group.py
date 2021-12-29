@@ -23,9 +23,10 @@ class Group(Base):
     __tablename__ = "groups"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True)
+    name = Column(String(20), unique=True, index=True)
+    desc = Column(String(255), nullable=True)
 
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    users = relationship("Users", secondary=users_groups)
-    questions = relationship("Questions", secondary=questions_groups)
+    users = relationship("User", secondary=users_groups)
+    questions = relationship("Question", secondary=questions_groups)
