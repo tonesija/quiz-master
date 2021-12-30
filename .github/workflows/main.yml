@@ -38,6 +38,7 @@ jobs:
         run: |
           export PGPASSWORD=postgres
           psql -h localhost -U postgres -tc "CREATE DATABASE QuizMasterDevDB_test;"
+          psql -l
       - name: Run UTs
         run: |
           cd server
