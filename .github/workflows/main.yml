@@ -34,12 +34,14 @@ jobs:
         run: |
           cd server
           python -m pip install -r requirements.txt
-      - name: Create postgres database
+      #- name: Create postgres database
+      #  run: |
+      #    export PGPASSWORD=postgress
+      #    psql -h localhost -U postgres -c 'CREATE DATABASE QuizMasterDevDB_test;'
+      - name: Run UTs
         run: |
           export PGPASSWORD=postgress
           psql -h localhost -U postgres -c 'CREATE DATABASE QuizMasterDevDB_test;'
-      - name: Run UTs
-        run: |
           cd server
           export SERVER_MODE=build
           export DATABASE_URL=postgres://postgres:postgres@localhost:5432/QuizMasterDevDB
