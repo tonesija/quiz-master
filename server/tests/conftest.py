@@ -1,13 +1,15 @@
-import os
 from fastapi.testclient import TestClient
-from pydantic.tools import T
 import pytest
 from contextlib import contextmanager
 from sqlalchemy.orm.session import sessionmaker
 from main import app
 from sqlalchemy import create_engine
-from db.db import Base, SessionLocal, get_db
+from db.db import Base, get_db
 from config import get_database_url
+
+# Need to import all fixtures to conftest
+from tests.fixtures.user_fixtures import *
+from tests.fixtures.questions_fixture import *
 
 # Database for UTs should end in _test.
 DATABASE_URL = f"{get_database_url()}_test"
@@ -42,7 +44,7 @@ def drop_db_tables(engine):
     """Drop tables from the db.
 
     Args:
-        engine ([type]): [description]
+        engine: db engine.
     """
 
     Base.metadata.drop_all(bind=engine, tables=reversed(Base.metadata.sorted_tables))
@@ -52,7 +54,7 @@ def delete_db_data(db):
     """Deletes all date from the db.
 
     Args:
-        db ([type]): [description]
+        db (Session)
     """
 
     for tbl in reversed(Base.metadata.sorted_tables):
@@ -73,7 +75,7 @@ def test_db_session():
 
 
 @pytest.fixture
-def fixture_db_session():
+def fixture_db():
     """Yields session, after test tears down everything."""
 
     SessionLocal = sessionmaker(bind=engine)
