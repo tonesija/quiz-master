@@ -38,6 +38,7 @@ jobs:
         run: |
           cd server
           export SERVER_MODE=build
+          export DATABASE_URL=postgres://postgres:postgres@localhost:5432/QuizMasterDevDB
           pytest -v
 
   build-and-deploy:
