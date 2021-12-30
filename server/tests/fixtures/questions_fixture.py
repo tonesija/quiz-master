@@ -1,8 +1,6 @@
 import pytest
 from db.question import Question
 
-from tests.fixtures.user_fixtures import seed_users
-
 
 @pytest.fixture
 def question_1_public():
