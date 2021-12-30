@@ -10,7 +10,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres-latest
         env:
           POSTGRES_DB: QuizMasterDB_test
           POSTGRES_PASSWORD: postgres
@@ -37,7 +37,7 @@ jobs:
       - name: Create postgres database
         run: |
           export PGPASSWORD=postgres
-          psql -h localhost -U postgres -tc 'CREATE DATABASE QuizMasterDevDB_test;'
+          psql -h localhost -U postgres -tc "CREATE DATABASE QuizMasterDevDB_test;"
       - name: Run UTs
         run: |
           cd server
