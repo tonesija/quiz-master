@@ -40,7 +40,7 @@ jobs:
       #    psql -h localhost -U postgres -c 'CREATE DATABASE QuizMasterDevDB_test;'
       - name: Run UTs
         run: |
-          export PGPASSWORD=postgress
+          export PGPASSWORD=postgres
           psql -h localhost -U postgres -c 'CREATE DATABASE QuizMasterDevDB_test;'
           cd server
           export SERVER_MODE=build
