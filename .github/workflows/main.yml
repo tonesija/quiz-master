@@ -35,7 +35,7 @@ jobs:
           cd server
           python -m pip install -r requirements.txt
       - name: Create postgres database
-        run: psql -h postgres -U postgres -c 'CREATE DATABASE QuizMasterDevDB_test;'
+        run: psql -h localhost -U postgres -c 'CREATE DATABASE QuizMasterDevDB_test;'
       - name: Run UTs
         run: |
           cd server
