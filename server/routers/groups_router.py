@@ -22,7 +22,7 @@ from services.utils import get_user_by_email
 router = APIRouter(prefix="/my/groups", tags=["Groups"])
 
 
-@router.get("/", response_model=List[GroupOut])
+@router.get("", response_model=List[GroupOut])
 async def list_owned(
     user: User = Depends(get_and_create_user), db: Session = Depends(get_db)
 ):
@@ -104,7 +104,7 @@ async def get_group(
 
 
 @router.post(
-    "/",
+    "",
     status_code=status.HTTP_201_CREATED,
     responses={status.HTTP_409_CONFLICT: {}},
     response_model=GroupOut,
@@ -147,6 +147,8 @@ async def update_group(
     db: Session = Depends(get_db),
 ):
     """Updates current user's group.
+
+    Peforms a partial update. (key value pairs can be excluded)
 
     Raises:
         HTTPException: 404 if the group is not found.

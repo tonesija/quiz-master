@@ -37,7 +37,7 @@ async def list_questions(
 
 
 @router.get(
-    "/quizes",
+    "/quizzes",
     response_model=List[QuizOut],
 )
 async def list_quizes(
@@ -46,7 +46,7 @@ async def list_quizes(
     q: str = "",
     db: Session = Depends(get_db),
 ):
-    """List public quizes."""
+    """List public quizzes."""
 
     quizes = (
         db.query(Quiz)
@@ -61,7 +61,7 @@ async def list_quizes(
 
 
 @router.get(
-    "/quizes/{quiz_id}",
+    "/quizzes/{quiz_id}",
     response_model=QuizOut,
 )
 async def get_public_quiz(
@@ -80,14 +80,14 @@ async def get_public_quiz(
 
 
 @router.get(
-    "/quizes/{quiz_id}/questions",
+    "/quizzes/{quiz_id}/questions",
     response_model=List[QuestionOut],
 )
 async def list_public_quiz_questions(
     quiz_id: int,
     db: Session = Depends(get_db),
 ):
-    """List public quizes questions."""
+    """List public quizzes questions."""
 
     try:
         quiz_db = (
