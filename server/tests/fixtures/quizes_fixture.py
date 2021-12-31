@@ -13,6 +13,10 @@ def quiz_1_public():
 def quiz_2_public():
     return {"name": "Quiz 2 public", "public": True}
 
+@pytest.fixture
+def quiz_1():
+    return {"name": "Quiz 1"}
+
 
 @pytest.fixture
 def seed_public_quizes(
@@ -43,3 +47,24 @@ def seed_public_quizes(
     fixture_db.commit()
 
     return [quiz_1_public, quiz_2_public]
+
+@pytest.fixture
+def seed_quizes_to_you(
+    fixture_db,
+    seed_you,
+    quiz_1,
+):
+    """TODO.
+
+    Returns:
+        (list[dict]): list of added quizes.
+    """
+
+    id = seed_you
+    quiz_1_db = Quiz(**quiz_1, user_id=id)
+
+
+    fixture_db.add(quiz_1_db)
+    fixture_db.commit()
+
+    return [quiz_1]

@@ -6,6 +6,7 @@ from main import app
 from sqlalchemy import create_engine
 from db.db import Base, get_db
 from config import get_database_url
+from auth import get_email
 
 # Need to import all fixtures to conftest
 from tests.fixtures.user_fixtures import *
@@ -14,6 +15,7 @@ from tests.fixtures.quizes_fixture import *
 
 # Database for UTs should end in _test.
 DATABASE_URL = f"{get_database_url()}_test"
+TEST_EMAIL = "you@email.com"
 
 engine = create_engine(DATABASE_URL)
 
@@ -24,7 +26,11 @@ def setup_test_db():
 
     drop_db_tables(engine)
     Base.metadata.create_all(bind=engine)
+
+    # Mock the get_db and auth dependency
     app.dependency_overrides[get_db] = get_test_db
+    app.dependency_overrides[get_email] = lambda: TEST_EMAIL
+
     yield  # Run tests
     drop_db_tables(engine)
 
