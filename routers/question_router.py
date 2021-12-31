@@ -13,7 +13,7 @@ router = APIRouter(prefix="/my/questions", tags=["Questions"])
 
 
 @router.get(
-    "/",
+    "",
     response_model=List[QuestionOut],
 )
 async def list_owned(
@@ -61,7 +61,7 @@ async def get_question(
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Question not found.")
 
 
-@router.post("/", response_model=QuestionOut)
+@router.post("", response_model=QuestionOut)
 async def create_question(
     question: QuestionCreate,
     user: User = Depends(get_and_create_user),
@@ -84,6 +84,8 @@ async def update_question(
     db: Session = Depends(get_db),
 ):
     """Updates authorized user's question.
+
+    Peforms a partial update. (key value pairs can be excluded)
 
     Raises:
         HTTPException: 404 if the question is not found.

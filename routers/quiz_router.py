@@ -13,14 +13,14 @@ from db.question import Question
 from pydantic_models.group import GroupAddQuestion
 from pydantic_models.question import QuestionOut
 
-router = APIRouter(prefix="/my/quizes", tags=["Quizes"])
+router = APIRouter(prefix="/my/quizzes", tags=["Quizzes"])
 
 
-@router.get("/", response_model=List[QuizOut])
+@router.get("", response_model=List[QuizOut])
 async def list(
     user: User = Depends(get_and_create_user), db: Session = Depends(get_db)
 ):
-    """List current user's quizes."""
+    """List current user's quizzes."""
 
     quizes = db.query(Quiz).filter(Quiz.user_id == user.id).all()
     return quizes
@@ -62,7 +62,7 @@ async def list_questions(
     user: User = Depends(get_and_create_user),
     db: Session = Depends(get_db),
 ):
-    """List current user's quizes questions."""
+    """List current user's quizzes questions."""
 
     try:
         quiz_db = (
@@ -86,7 +86,7 @@ async def list_questions(
 
 
 @router.post(
-    "/",
+    "",
     status_code=status.HTTP_201_CREATED,
     responses={status.HTTP_409_CONFLICT: {}},
     response_model=QuizOut,
@@ -129,6 +129,8 @@ async def update_quiz(
 ):
     """Updates current user's quiz.
 
+    Peforms a partial update. (key value pairs can be excluded)
+
     Raises:
         HTTPException: 404 if the quiz is not found.
         HTTPException: 409 if the quiz with the same name already exists.
@@ -156,7 +158,7 @@ async def delete_quiz(
     user: User = Depends(get_and_create_user),
     db: Session = Depends(get_db),
 ):
-    """Delete current user's quit.
+    """Delete current user's quiz.
 
     Raises:
         HTTPException: 404 if the quiz is not found.

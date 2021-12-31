@@ -19,7 +19,7 @@ router = APIRouter(
 
 
 @router.post(
-    "/", response_model=SubuestionOut, responses={status.HTTP_404_NOT_FOUND: {}}
+    "", response_model=SubuestionOut, responses={status.HTTP_404_NOT_FOUND: {}}
 )
 async def create_subquestions(
     question_id: int,
@@ -60,6 +60,8 @@ async def update_subquestion(
     db: Session = Depends(get_db),
 ):
     """Updates authorized user's subquestion.
+
+    Peforms a partial update. (key value pairs can be excluded)
 
     Raises:
         HTTPException: 404 if the question or subquestion is not found.

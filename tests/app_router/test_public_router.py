@@ -14,47 +14,47 @@ class TestPublicRouter:
         assert len(res_json) == len(seed_public_questions)
 
     def test_get_public_quizes(self, client, seed_public_quizes):
-        """Test the /quizes public endpoint."""
+        """Test the /quizzes public endpoint."""
 
-        res = client.get("/quizes")
+        res = client.get("/quizzes")
         res_json = res.json()
 
         assert res.status_code == status.HTTP_200_OK
         assert len(res_json) == len(seed_public_quizes)
 
     def test_get_specific_public_quiz(self, client, seed_public_quizes):
-        """Test the /quizes/{quiz_id} endpoint."""
+        """Test the /quizzes/{quiz_id} endpoint."""
 
         with test_db_session() as db:
             quiz = db.query(Quiz).first()
 
-        res = client.get(f"/quizes/{quiz.id}")
+        res = client.get(f"/quizzes/{quiz.id}")
         res_json = res.json()
 
         assert res.status_code == status.HTTP_200_OK
         assert res_json["name"] == quiz.name
 
-        res = client.get(f"/quizes/{10000}")
+        res = client.get(f"/quizzes/{10000}")
         res_json = res.json()
 
         assert res.status_code == status.HTTP_404_NOT_FOUND
         assert "not found" in res_json["detail"]
 
     def test_get_specific_public_quiz_questions(self, client, seed_public_quizes):
-        """Test the /quizes/{quiz_id}/questions endpoint."""
+        """Test the /quizzes/{quiz_id}/questions endpoint."""
 
         with test_db_session() as db:
             quiz = db.query(Quiz).first()
             questions = quiz.questions
 
-        res = client.get(f"/quizes/{quiz.id}/questions")
+        res = client.get(f"/quizzes/{quiz.id}/questions")
         res_json = res.json()
 
         assert res.status_code == status.HTTP_200_OK
         assert len(res_json) == len(questions)
         assert res_json[0]["outer_text"] == questions[0].outer_text
 
-        res = client.get(f"/quizes/{10000}")
+        res = client.get(f"/quizzes/{10000}")
         res_json = res.json()
 
         assert res.status_code == status.HTTP_404_NOT_FOUND
