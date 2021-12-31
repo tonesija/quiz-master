@@ -1,6 +1,8 @@
 import pytest
 from db.user import User
 
+TEST_EMAIL = "you@email.com"
+
 
 @pytest.fixture
 def user_1():
@@ -14,7 +16,7 @@ def user_2():
 
 @pytest.fixture
 def user_you():
-    return {"email": "you@email.com"}
+    return {"email": TEST_EMAIL}
 
 
 @pytest.fixture

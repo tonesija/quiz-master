@@ -15,7 +15,6 @@ from tests.fixtures.quizes_fixture import *
 
 # Database for UTs should end in _test.
 DATABASE_URL = f"{get_database_url()}_test"
-TEST_EMAIL = "you@email.com"
 
 engine = create_engine(DATABASE_URL)
 

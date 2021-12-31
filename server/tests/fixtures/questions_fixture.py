@@ -5,7 +5,7 @@ from db.question import Question
 @pytest.fixture
 def question_1_public():
     return {
-        "outer_text": "Question 1 outer text",
+        "outer_text": "Question 1 public outer text",
         "questions_per_slide": 1,
         "public": True,
     }
@@ -14,9 +14,33 @@ def question_1_public():
 @pytest.fixture
 def question_2_public():
     return {
-        "outer_text": "Question 2 outer text",
+        "outer_text": "Question 2 public outer text",
         "questions_per_slide": 1,
         "public": True,
+    }
+
+
+@pytest.fixture
+def question_1():
+    return {
+        "outer_text": "Question 1 outer text",
+        "questions_per_slide": 1,
+    }
+
+
+@pytest.fixture
+def question_2():
+    return {
+        "outer_text": "Question 2 outer text",
+        "questions_per_slide": 1,
+    }
+
+
+@pytest.fixture
+def question_3():
+    return {
+        "outer_text": "Question 3 outer text",
+        "questions_per_slide": 1,
     }
 
 
