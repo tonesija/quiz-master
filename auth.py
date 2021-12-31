@@ -57,7 +57,6 @@ def get_and_create_user(db: Session = Depends(get_db), email: str = Depends(get_
     Returns:
         (int): authenticated user's id.
     """
-
     user = create_and_get_user_by_email(db, email)
     return user
 
