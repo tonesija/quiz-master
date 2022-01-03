@@ -79,6 +79,38 @@ async def list_questions(
 
 
 @router.get(
+    "/{group_id}/questions/count",
+    response_model=int,
+    responses={status.HTTP_404_NOT_FOUND: {}},
+)
+async def count_questions(
+    group_id: int,
+    q: str = "",
+    user: User = Depends(get_and_create_user),
+    db: Session = Depends(get_db),
+):
+    """Count current user's groups questions."""
+
+    try:
+        group_db = (
+            db.query(Group)
+            .filter(Group.id == group_id and Group.users.contains(user))
+            .one()
+        )
+    except NoResultFound:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Group not found.")
+
+    count = (
+        db.query(Question)
+        .filter(Question.groups.contains(group_db))
+        .filter(Question.outer_text.like(f"%{q}%"))
+        .count()
+    )
+
+    return count
+
+
+@router.get(
     "/{group_id}", response_model=GroupOut, responses={status.HTTP_404_NOT_FOUND: {}}
 )
 async def get_group(
