@@ -38,6 +38,27 @@ async def list_owned(
 
 
 @router.get(
+    "/count",
+    response_model=int,
+)
+async def count_owned(
+    q: str = "",
+    user: User = Depends(get_and_create_user),
+    db: Session = Depends(get_db),
+):
+    """Count current user's owned questions."""
+
+    count = (
+        db.query(Question)
+        .filter(Question.user_id == user.id)
+        .filter(Question.outer_text.like(f"%{q}%"))
+        .count()
+    )
+
+    return count
+
+
+@router.get(
     "/{question_id}",
     response_model=QuestionOut,
     responses={status.HTTP_404_NOT_FOUND: {}},

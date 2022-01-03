@@ -85,6 +85,38 @@ async def list_questions(
     return questions
 
 
+@router.get(
+    "/{quiz_id}/questions/count",
+    response_model=int,
+    responses={status.HTTP_404_NOT_FOUND: {}},
+)
+async def count_questions(
+    quiz_id: int,
+    q: str = "",
+    user: User = Depends(get_and_create_user),
+    db: Session = Depends(get_db),
+):
+    """Count current user's quizzes questions."""
+
+    try:
+        quiz_db = (
+            db.query(Quiz)
+            .filter(Quiz.id == quiz_id and Quiz.users.contains(user))
+            .one()
+        )
+    except NoResultFound:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Quiz not found.")
+
+    count = (
+        db.query(Question)
+        .filter(Question.quizes.contains(quiz_db))
+        .filter(Question.outer_text.like(f"%{q}%"))
+        .count()
+    )
+
+    return count
+
+
 @router.post(
     "",
     status_code=status.HTTP_201_CREATED,

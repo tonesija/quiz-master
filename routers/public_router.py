@@ -37,6 +37,26 @@ async def list_questions(
 
 
 @router.get(
+    "/questions/count",
+    response_model=int,
+)
+async def count_questions(
+    q: str = "",
+    db: Session = Depends(get_db),
+):
+    """Count public questions."""
+
+    count = (
+        db.query(Question)
+        .filter(Question.public == True)
+        .filter(Question.outer_text.like(f"%{q}%"))
+        .count()
+    )
+
+    return count
+
+
+@router.get(
     "/quizzes",
     response_model=List[QuizOut],
 )
@@ -58,6 +78,26 @@ async def list_quizes(
     )
 
     return quizes
+
+
+@router.get(
+    "/quizzes/count",
+    response_model=int,
+)
+async def count_quizes(
+    q: str = "",
+    db: Session = Depends(get_db),
+):
+    """Count public quizzes."""
+
+    count = (
+        db.query(Quiz)
+        .filter(Quiz.public == True)
+        .filter(Quiz.name.like(f"%{q}%"))
+        .count()
+    )
+
+    return count
 
 
 @router.get(
