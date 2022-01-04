@@ -106,7 +106,7 @@ class TestQuizesRouter:
         assert res.status_code == status.HTTP_404_NOT_FOUND
 
     def test_add_question_to_quiz(self, client, seed_quizes_to_you, question_3):
-        """Test the "api//my/quizzes/{quiz_id}/add-question" POST endpoint."""
+        """Test the "api/my/quizzes/{quiz_id}/add-question" POST endpoint."""
 
         with test_db_session() as db:
             quiz_db = db.query(Quiz).first()
@@ -132,7 +132,19 @@ class TestQuizesRouter:
             assert len(quiz_db.questions) == num_questions_before + 1
 
         res = client.post(
-            "api//my/quizzes/10000/add-question", json={"question_id": question_id}
+            "api/my/quizzes/10000/add-question", json={"question_id": question_id}
         )
 
         assert res.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_count_quizes(self, client, seed_quizes_to_you):
+        """Test the "api/my/quizzes/{quiz_id}/questions/count" endpoint."""
+        
+        with test_db_session()as db:
+            quiz_id = db.query(Quiz).one().id
+
+        res = client.get(f"api/my/quizzes/{quiz_id}/questions/count")
+
+        assert res.status_code == status.HTTP_200_OK
+        with test_db_session() as db:
+            assert res.json() == db.query(Question).count()
