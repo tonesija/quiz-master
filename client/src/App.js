@@ -4,7 +4,7 @@ import Profile from "./components/Profile";
 
 function App() {
   return (
-    <div>
+    <div className="">
       Quiz Muster
       <LoginButton />
       <LogoutButton />
