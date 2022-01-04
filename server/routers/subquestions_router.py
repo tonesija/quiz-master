@@ -40,7 +40,6 @@ async def create_subquestions(
             .filter(Question.user_id == user.id)
             .one()
         )
-        print(question.id, question_id)
 
         subquestion = Subquestion(**subquestion.dict())
         question.subquestions.append(subquestion)

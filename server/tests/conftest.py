@@ -12,6 +12,7 @@ from auth import get_email
 from tests.fixtures.user_fixtures import *
 from tests.fixtures.questions_fixture import *
 from tests.fixtures.quizes_fixture import *
+from tests.fixtures.subquestions_fixture import *
 
 # Database for UTs should end in _test.
 DATABASE_URL = f"{get_database_url()}_test"
