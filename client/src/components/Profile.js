@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const Profile = () => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
-  if (isAuthenticated) {
-    getAccessTokenSilently().then((accessToken) => {
-      console.log(accessToken);
-    });
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      getAccessTokenSilently().then((accessToken) => {
+        console.log(accessToken);
+      });
+    }
+  }, [isAuthenticated]);
 
   if (user) {
     return (
