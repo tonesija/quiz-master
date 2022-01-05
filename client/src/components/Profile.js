@@ -10,7 +10,7 @@ const Profile = () => {
         console.log(accessToken);
       });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   if (user) {
     return (
